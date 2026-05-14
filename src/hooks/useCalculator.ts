@@ -7,23 +7,18 @@ export const useCalculator = () => {
   const [mainText, setMainText] = useState(DEFAULT_MESSAGE);
   const [subText, setSubText] = useState('');
   const [isNewInput, setIsNewInput] = useState(false);
+  
+  // 曖昧化される前の正確な数値と、曖昧化中かどうかの状態を保持
+  const [realValue, setRealValue] = useState<number | null>(null);
+  const [isFuzzy, setIsFuzzy] = useState(false);
 
   // 簡易的な数式評価関数
   const evaluateExpression = (expr: string): string => {
     try {
-      // 演算子記号をJavaScriptで評価可能な形式に変換
       const sanitizedExpr = expr.replace(/×/g, '*').replace(/÷/g, '/');
-      // 安全のため、数値と四則演算子以外の文字を除去
-      // eslint-disable-next-line no-useless-escape
       if (/[^0-9.+\-*/\s]/.test(sanitizedExpr)) return 'Error';
-
-      // eslint-disable-next-line no-eval
       const result = eval(sanitizedExpr);
-
       if (!isFinite(result)) return 'Error';
-
-      // 浮動小数点の計算誤差対策（例: 0.1 + 0.2）
-      // 小数点第10位までに丸める
       const roundedResult = Math.round(result * 1e10) / 1e10;
       return roundedResult.toString();
     } catch (e) {
@@ -34,23 +29,18 @@ export const useCalculator = () => {
   const handleNumberPress = (num: string) => {
     setMainText((prev) => {
       const nextMain = prev === DEFAULT_MESSAGE || isNewInput ? num : prev + num;
-
       setSubText((prevSub) => {
         if (!prevSub || prevSub === DEFAULT_MESSAGE || isNewInput) {
-          const parts = prevSub.split(' ');
-          const lastPart = parts[parts.length - 1];
-          if (/[0-9.]/.test(lastPart) && !isNewInput) {
-            parts[parts.length - 1] = nextMain;
-            return parts.join(' ');
-          }
           return prevSub === '' || prevSub === DEFAULT_MESSAGE ? num : `${prevSub}${num}`;
         }
         return prevSub + num;
       });
-
       setIsNewInput(false);
       return nextMain;
     });
+    // 入力開始時は曖昧化状態をリセット
+    setIsFuzzy(false);
+    setRealValue(null);
   };
 
   const handleOperatorPress = (op: string) => {
@@ -63,6 +53,7 @@ export const useCalculator = () => {
       return `${trimmed} ${op} `;
     });
     setIsNewInput(true);
+    setIsFuzzy(false);
   };
 
   const handleEqualPress = () => {
@@ -71,30 +62,34 @@ export const useCalculator = () => {
     // 正確な結果を計算
     const exactResult = evaluateExpression(subText);
 
-    // ファジーなフレーズに変換
-    const fuzzyResult = fuzzify(exactResult);
+    // 曖昧化オブジェクトを取得
+    const resultObj = fuzzify(exactResult);
 
-    setMainText(fuzzyResult);
+    setMainText(resultObj.displayText);
+    setRealValue(resultObj.realValue);
+    setIsFuzzy(resultObj.isFuzzy);
+    
     setSubText('');
     setIsNewInput(true);
   };
 
   const handleDotPress = () => {
     if (mainText.includes('.') && !isNewInput) return;
-
     const nextMain = isNewInput || mainText === DEFAULT_MESSAGE ? '0.' : `${mainText}.`;
     setMainText(nextMain);
-
     setSubText((prevSub) => {
       if (isNewInput || prevSub === '' || prevSub === DEFAULT_MESSAGE) return '0.';
       return `${prevSub}.`;
     });
     setIsNewInput(false);
+    setIsFuzzy(false);
   };
 
   const handleClear = () => {
     setMainText(DEFAULT_MESSAGE);
     setSubText('');
+    setRealValue(null);
+    setIsFuzzy(false);
     setIsNewInput(false);
   };
 
@@ -115,6 +110,8 @@ export const useCalculator = () => {
   return {
     mainText,
     subText,
+    realValue,
+    isFuzzy,
     handlePress,
   };
 };
