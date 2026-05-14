@@ -50,8 +50,8 @@ export const Display: React.FC<DisplayProps> = ({
           {mainText}
         </Text>
 
-        {/* 吹き出し風の正解表示 (曖昧化中のみ) */}
-        {isFuzzy && realValue !== null && (
+        {/* 吹き出し風の正解表示 (曖昧化中かつ有効な数値がある場合のみ) */}
+        {isFuzzy && realValue !== null && !isNaN(realValue) && (
           <View style={styles.bubbleContainer}>
             <View style={styles.bubbleArrow} />
             <Text style={styles.bubbleText}>本当の数値は {realValue} です</Text>
