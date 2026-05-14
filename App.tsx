@@ -1,19 +1,50 @@
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Display } from './src/components/Display';
 import { CalcButton } from './src/components/CalcButton';
 
 export default function App() {
+  const [mainText, setMainText] = useState('0');
+  const [subText, setSubText] = useState('');
+
+  const handleNumberPress = (num: string) => {
+    setMainText((prev) => {
+      if (prev === '0') return num;
+      return prev + num;
+    });
+  };
+
+  const handleDotPress = () => {
+    setMainText((prev) => {
+      if (prev.includes('.')) return prev;
+      return prev + '.';
+    });
+  };
+
+  const handleClear = () => {
+    setMainText('0');
+    setSubText('');
+  };
+
   const handlePress = (val: string) => {
-    // 動作確認用のダミー関数
-    console.log('Pressed:', val);
+    if (/[0-9]/.test(val)) {
+      handleNumberPress(val);
+    } else if (val === '.') {
+      handleDotPress();
+    } else if (val === 'C') {
+      handleClear();
+    } else {
+      // 演算子などのロジックは次以降のIssueで実装
+      console.log('Pressed other:', val);
+    }
   };
 
   return (
     <View style={styles.container}>
       {/* ディスプレイ領域 */}
       <View style={styles.displayWrapper}>
-        <Display subText="100 + 100 =" mainText="200くらいじゃないですかね、知らんけど" />
+        <Display subText={subText} mainText={mainText} />
       </View>
 
       {/* キーボード領域 */}
