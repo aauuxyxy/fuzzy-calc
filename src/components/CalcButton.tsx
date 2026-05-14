@@ -49,8 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonZero: {
-    width: '100%',
-    flex: 2, // グリッドレイアウトで2列分相当の幅を取るための暫定指定（後でGridに合わせて調整）
+    flex: 1, // 残りのスペース（2列分）をすべて埋める
     alignItems: 'flex-start',
     paddingLeft: 24, // 左寄せ気味に配置
   },

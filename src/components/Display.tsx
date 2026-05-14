@@ -34,19 +34,20 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     padding: 20,
-    backgroundColor: '#1E1E1E', // 暗めの背景（電卓風）
+    backgroundColor: '#374151', // プロトタイプのディスプレイ背景色
+    borderRadius: 12, // 角丸を追加
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    minHeight: 140, // ディスプレイの最小高さを確保
+    minHeight: 120, // 140から120に調整（プロトタイプ合わせ）
   },
   subText: {
-    color: '#A0A0A0', // グレー
-    fontSize: 24,
+    color: '#9ca3af', // プロトタイプのサブテキスト色
+    fontSize: 14, // 0.875rem相当
     marginBottom: 8,
   },
   mainText: {
-    color: '#FFFFFF', // 白
-    fontSize: 56,
+    color: '#f3f4f6', // プロトタイプのメインテキスト色
+    fontSize: 24, // 1.5rem相当
     fontWeight: 'bold',
   },
 });
