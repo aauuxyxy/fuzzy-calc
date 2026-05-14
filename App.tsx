@@ -6,7 +6,7 @@ import { useCalculator } from './src/hooks/useCalculator';
 import Logo from './assets/logo.svg';
 
 export default function App() {
-  const { mainText, subText, handlePress } = useCalculator();
+  const { mainText, subText, realValue, isFuzzy, handlePress } = useCalculator();
 
   return (
     <View style={styles.container}>
@@ -17,7 +17,12 @@ export default function App() {
 
       {/* ディスプレイ領域 */}
       <View style={styles.displayWrapper}>
-        <Display subText={subText} mainText={mainText} />
+        <Display
+          subText={subText}
+          mainText={mainText}
+          realValue={realValue}
+          isFuzzy={isFuzzy}
+        />
       </View>
 
       {/* キーボード領域 */}
