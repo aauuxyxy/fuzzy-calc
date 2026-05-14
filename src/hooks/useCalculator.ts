@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { fuzzify } from '../utils/fuzzifier';
 
 export const useCalculator = () => {
   const [mainText, setMainText] = useState('0');
@@ -65,8 +66,13 @@ export const useCalculator = () => {
   const handleEqualPress = () => {
     if (subText.trim() === '') return;
 
-    const result = evaluateExpression(subText);
-    setMainText(result);
+    // 正確な結果を計算
+    const exactResult = evaluateExpression(subText);
+
+    // ファジーなフレーズに変換
+    const fuzzyResult = fuzzify(exactResult);
+
+    setMainText(fuzzyResult);
     setSubText('');
     setIsNewInput(true);
   };
