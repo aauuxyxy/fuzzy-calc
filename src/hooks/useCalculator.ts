@@ -16,7 +16,13 @@ export const useCalculator = () => {
 
       // eslint-disable-next-line no-eval
       const result = eval(sanitizedExpr);
-      return result.toString();
+
+      if (!isFinite(result)) return 'Error';
+
+      // 浮動小数点の計算誤差対策（例: 0.1 + 0.2）
+      // 小数点第10位までに丸める
+      const roundedResult = Math.round(result * 1e10) / 1e10;
+      return roundedResult.toString();
     } catch (e) {
       return 'Error';
     }
