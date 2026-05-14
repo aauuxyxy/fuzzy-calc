@@ -1,44 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Display } from './src/components/Display';
-import { CalcButton } from './src/components/CalcButton';
+import { Keypad } from './src/components/Keypad';
+import { useCalculator } from './src/hooks/useCalculator';
 
 export default function App() {
-  const [mainText, setMainText] = useState('0');
-  const [subText, setSubText] = useState('');
-
-  const handleNumberPress = (num: string) => {
-    setMainText((prev) => {
-      if (prev === '0') return num;
-      return prev + num;
-    });
-  };
-
-  const handleDotPress = () => {
-    setMainText((prev) => {
-      if (prev.includes('.')) return prev;
-      return prev + '.';
-    });
-  };
-
-  const handleClear = () => {
-    setMainText('0');
-    setSubText('');
-  };
-
-  const handlePress = (val: string) => {
-    if (/[0-9]/.test(val)) {
-      handleNumberPress(val);
-    } else if (val === '.') {
-      handleDotPress();
-    } else if (val === 'C') {
-      handleClear();
-    } else {
-      // 演算子などのロジックは次以降のIssueで実装
-      console.log('Pressed other:', val);
-    }
-  };
+  const { mainText, subText, handlePress } = useCalculator();
 
   return (
     <View style={styles.container}>
@@ -48,37 +15,8 @@ export default function App() {
       </View>
 
       {/* キーボード領域 */}
-      <View style={styles.keypadGrid}>
-        <View style={styles.row}>
-          <CalcButton title="C" onPress={() => handlePress('C')} type="action" />
-          <CalcButton title="±" onPress={() => handlePress('±')} type="operator" />
-          <CalcButton title="%" onPress={() => handlePress('%')} type="operator" />
-          <CalcButton title="÷" onPress={() => handlePress('÷')} type="operator" />
-        </View>
-        <View style={styles.row}>
-          <CalcButton title="7" onPress={() => handlePress('7')} />
-          <CalcButton title="8" onPress={() => handlePress('8')} />
-          <CalcButton title="9" onPress={() => handlePress('9')} />
-          <CalcButton title="×" onPress={() => handlePress('×')} type="operator" />
-        </View>
-        <View style={styles.row}>
-          <CalcButton title="4" onPress={() => handlePress('4')} />
-          <CalcButton title="5" onPress={() => handlePress('5')} />
-          <CalcButton title="6" onPress={() => handlePress('6')} />
-          <CalcButton title="-" onPress={() => handlePress('-')} type="operator" />
-        </View>
-        <View style={styles.row}>
-          <CalcButton title="1" onPress={() => handlePress('1')} />
-          <CalcButton title="2" onPress={() => handlePress('2')} />
-          <CalcButton title="3" onPress={() => handlePress('3')} />
-          <CalcButton title="+" onPress={() => handlePress('+')} type="operator" />
-        </View>
-        <View style={styles.row}>
-          <CalcButton title="0" onPress={() => handlePress('0')} isZero />
-          <CalcButton title="." onPress={() => handlePress('.')} />
-          <CalcButton title="=" onPress={() => handlePress('=')} type="operator" />
-        </View>
-      </View>
+      <Keypad onPress={handlePress} />
+
       <StatusBar style="light" />
     </View>
   );
@@ -94,17 +32,5 @@ const styles = StyleSheet.create({
     paddingTop: 60, // ステータスバー領域の確保
     paddingHorizontal: 20,
     justifyContent: 'flex-end',
-  },
-  keypadGrid: {
-    flex: 2,
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    gap: 12,
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
   },
 });
