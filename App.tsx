@@ -28,11 +28,12 @@ export default function App() {
 
   const handleNumberPress = (num: string) => {
     setMainText((prev) => {
-      if (prev === '0' || isNewInput) {
-        setIsNewInput(false);
-        return num;
+      const next = prev === '0' || isNewInput ? num : prev + num;
+      if (operator && previousOperand !== null) {
+        setSubText(`${previousOperand} ${operator} ${next}`);
       }
-      return prev + num;
+      setIsNewInput(false);
+      return next;
     });
   };
 
@@ -46,24 +47,44 @@ export default function App() {
       setIsNewInput(true);
     } else if (operator) {
       const result = calculate(parseFloat(previousOperand), current, operator);
-      setPreviousOperand(result.toString());
+      const resultStr = result.toString();
+      setPreviousOperand(resultStr);
       setOperator(op);
-      setMainText(result.toString());
-      setSubText(`${result} ${op}`);
+      setMainText(resultStr);
+      setSubText(`${resultStr} ${op}`);
       setIsNewInput(true);
     }
   };
 
+  const handleEqualPress = () => {
+    if (previousOperand === null || operator === null) return;
+
+    const current = parseFloat(mainText);
+    const result = calculate(parseFloat(previousOperand), current, operator);
+    const resultStr = result.toString();
+
+    setSubText(`${previousOperand} ${operator} ${mainText} =`);
+    setMainText(resultStr);
+    setPreviousOperand(null);
+    setOperator(null);
+    setIsNewInput(true);
+  };
+
   const handleDotPress = () => {
+    let next: string;
     if (isNewInput) {
-      setMainText('0.');
+      next = '0.';
+      setMainText(next);
       setIsNewInput(false);
-      return;
+    } else {
+      if (mainText.includes('.')) return;
+      next = mainText + '.';
+      setMainText(next);
     }
-    setMainText((prev) => {
-      if (prev.includes('.')) return prev;
-      return prev + '.';
-    });
+
+    if (operator && previousOperand !== null) {
+      setSubText(`${previousOperand} ${operator} ${next}`);
+    }
   };
 
   const handleClear = () => {
@@ -79,6 +100,8 @@ export default function App() {
       handleNumberPress(val);
     } else if (['+', '-', '×', '÷'].includes(val)) {
       handleOperatorPress(val);
+    } else if (val === '=') {
+      handleEqualPress();
     } else if (val === '.') {
       handleDotPress();
     } else if (val === 'C') {
