@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Metro Bundler Cache
+.expo/
+dist/
+build/
+
+# Environment Variables
+.env
+.env.local
+.env.example
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Expo related
+.expo-shared/
+
+# Expo-specific config files that may contain secrets
+.expo/local-credentials.json
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Linting
+.eslintcache
+
+# Performance
+*.log
