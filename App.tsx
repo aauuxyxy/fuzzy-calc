@@ -31,6 +31,8 @@ export default function App() {
       const next = prev === '0' || isNewInput ? num : prev + num;
       if (operator && previousOperand !== null) {
         setSubText(`${previousOperand} ${operator} ${next}`);
+      } else {
+        setSubText(next);
       }
       setIsNewInput(false);
       return next;
@@ -63,7 +65,7 @@ export default function App() {
     const result = calculate(parseFloat(previousOperand), current, operator);
     const resultStr = result.toString();
 
-    setSubText(`${previousOperand} ${operator} ${mainText} =`);
+    setSubText(''); // イコール時はサブテキストをクリア
     setMainText(resultStr);
     setPreviousOperand(null);
     setOperator(null);
@@ -84,6 +86,8 @@ export default function App() {
 
     if (operator && previousOperand !== null) {
       setSubText(`${previousOperand} ${operator} ${next}`);
+    } else {
+      setSubText(next);
     }
   };
 
