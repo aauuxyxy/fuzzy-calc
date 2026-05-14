@@ -44,15 +44,15 @@ export const Keypad: React.FC<KeypadProps> = ({ onPress }) => {
 
 const styles = StyleSheet.create({
   keypadGrid: {
-    flex: 2,
+    flex: 1, // 親の要素（keypadWrapper）を埋める
     paddingHorizontal: 20,
     paddingBottom: 40,
-    gap: 12,
+    gap: 18, // 隙間を広げる
   },
   row: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: 18, // 隙間を広げる
   },
 });
