@@ -7,15 +7,59 @@ import { CalcButton } from './src/components/CalcButton';
 export default function App() {
   const [mainText, setMainText] = useState('0');
   const [subText, setSubText] = useState('');
+  const [previousOperand, setPreviousOperand] = useState<string | null>(null);
+  const [operator, setOperator] = useState<string | null>(null);
+  const [isNewInput, setIsNewInput] = useState(false);
+
+  const calculate = (first: number, second: number, op: string): number => {
+    switch (op) {
+      case '+':
+        return first + second;
+      case '-':
+        return first - second;
+      case '×':
+        return first * second;
+      case '÷':
+        return second !== 0 ? first / second : 0;
+      default:
+        return second;
+    }
+  };
 
   const handleNumberPress = (num: string) => {
     setMainText((prev) => {
-      if (prev === '0') return num;
+      if (prev === '0' || isNewInput) {
+        setIsNewInput(false);
+        return num;
+      }
       return prev + num;
     });
   };
 
+  const handleOperatorPress = (op: string) => {
+    const current = parseFloat(mainText);
+
+    if (previousOperand === null) {
+      setPreviousOperand(mainText);
+      setOperator(op);
+      setSubText(`${mainText} ${op}`);
+      setIsNewInput(true);
+    } else if (operator) {
+      const result = calculate(parseFloat(previousOperand), current, operator);
+      setPreviousOperand(result.toString());
+      setOperator(op);
+      setMainText(result.toString());
+      setSubText(`${result} ${op}`);
+      setIsNewInput(true);
+    }
+  };
+
   const handleDotPress = () => {
+    if (isNewInput) {
+      setMainText('0.');
+      setIsNewInput(false);
+      return;
+    }
     setMainText((prev) => {
       if (prev.includes('.')) return prev;
       return prev + '.';
@@ -25,17 +69,21 @@ export default function App() {
   const handleClear = () => {
     setMainText('0');
     setSubText('');
+    setPreviousOperand(null);
+    setOperator(null);
+    setIsNewInput(false);
   };
 
   const handlePress = (val: string) => {
     if (/[0-9]/.test(val)) {
       handleNumberPress(val);
+    } else if (['+', '-', '×', '÷'].includes(val)) {
+      handleOperatorPress(val);
     } else if (val === '.') {
       handleDotPress();
     } else if (val === 'C') {
       handleClear();
     } else {
-      // 演算子などのロジックは次以降のIssueで実装
       console.log('Pressed other:', val);
     }
   };
