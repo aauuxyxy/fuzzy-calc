@@ -10,6 +10,7 @@ export const useCalculator = () => {
   
   const [realValue, setRealValue] = useState<number | null>(null);
   const [isFuzzy, setIsFuzzy] = useState(false);
+  const [isResultDisplayed, setIsResultDisplayed] = useState(false);
 
   // ツールチップ用の状態
   const [tooltipMessage, setTooltipMessage] = useState('');
@@ -53,9 +54,13 @@ export const useCalculator = () => {
     });
     setIsFuzzy(false);
     setRealValue(null);
+    setIsResultDisplayed(false);
   };
 
   const handleOperatorPress = (op: string) => {
+    // 計算結果表示中は演算子を受け付けない
+    if (isResultDisplayed) return;
+
     setSubText((prevSub) => {
       const trimmed = prevSub.trim();
       if (trimmed === '' || trimmed === DEFAULT_MESSAGE) return `0 ${op} `;
@@ -77,6 +82,7 @@ export const useCalculator = () => {
     setIsFuzzy(resultObj.isFuzzy);
     setSubText('');
     setIsNewInput(true);
+    setIsResultDisplayed(true);
   };
 
   const handleDotPress = () => {
@@ -89,6 +95,7 @@ export const useCalculator = () => {
     });
     setIsNewInput(false);
     setIsFuzzy(false);
+    setIsResultDisplayed(false);
   };
 
   const handleClear = () => {
@@ -97,6 +104,7 @@ export const useCalculator = () => {
     setRealValue(null);
     setIsFuzzy(false);
     setIsNewInput(false);
+    setIsResultDisplayed(false);
   };
 
   const handlePress = (val: string) => {
