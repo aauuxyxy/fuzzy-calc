@@ -1,15 +1,27 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { Display } from './src/components/Display';
 import { Keypad } from './src/components/Keypad';
+import { Tooltip } from './src/components/Tooltip';
 import { useCalculator } from './src/hooks/useCalculator';
 import Logo from './assets/logo.svg';
 
 export default function App() {
-  const { mainText, subText, realValue, isFuzzy, handlePress } = useCalculator();
+  const {
+    mainText,
+    subText,
+    realValue,
+    isFuzzy,
+    tooltipMessage,
+    showTooltip,
+    handlePress,
+  } = useCalculator();
 
   return (
     <View style={styles.container}>
+      {/* ツールチップ表示（最前面オーバーレイ） */}
+      <Tooltip message={tooltipMessage} visible={showTooltip} />
+
       {/* ロゴ領域 */}
       <View style={styles.logoContainer}>
         <Logo width={500} height={100} />
@@ -48,16 +60,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#111827',
   },
   displayWrapper: {
-    flex: 1.5, // 表示領域を確保
+    flex: 1.5,
     paddingHorizontal: 20,
-    justifyContent: 'center', // 縦中央
+    justifyContent: 'center',
     backgroundColor: '#1f2937',
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#374151',
   },
   keypadWrapper: {
-    flex: 3, // キーパッド領域を広めに
+    flex: 3,
     paddingTop: 20,
   },
 });

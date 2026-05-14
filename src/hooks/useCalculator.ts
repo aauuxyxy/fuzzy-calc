@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { fuzzify } from '../utils/fuzzifier';
-
-export const DEFAULT_MESSAGE = 'あいまいに計算してあげますよ';
+import { DEFAULT_MESSAGE } from '../constants/messages';
+import jokePhrases from '../assets/joke_phrases.json';
 
 export const useCalculator = () => {
   const [mainText, setMainText] = useState(DEFAULT_MESSAGE);
   const [subText, setSubText] = useState('');
   const [isNewInput, setIsNewInput] = useState(false);
   
-  // 曖昧化される前の正確な数値と、曖昧化中かどうかの状態を保持
   const [realValue, setRealValue] = useState<number | null>(null);
   const [isFuzzy, setIsFuzzy] = useState(false);
 
-  // 簡易的な数式評価関数
+  // ツールチップ用の状態
+  const [tooltipMessage, setTooltipMessage] = useState('');
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const evaluateExpression = (expr: string): string => {
     try {
       const sanitizedExpr = expr.replace(/×/g, '*').replace(/÷/g, '/');
@@ -24,6 +26,17 @@ export const useCalculator = () => {
     } catch (e) {
       return 'Error';
     }
+  };
+
+  const handlePlusMinusPress = () => {
+    const { messages } = jokePhrases;
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    setTooltipMessage(randomMessage);
+    setShowTooltip(true);
+
+    setTimeout(() => {
+      setShowTooltip(false);
+    }, 2000);
   };
 
   const handleNumberPress = (num: string) => {
@@ -38,7 +51,6 @@ export const useCalculator = () => {
       setIsNewInput(false);
       return nextMain;
     });
-    // 入力開始時は曖昧化状態をリセット
     setIsFuzzy(false);
     setRealValue(null);
   };
@@ -58,17 +70,11 @@ export const useCalculator = () => {
 
   const handleEqualPress = () => {
     if (subText.trim() === '') return;
-
-    // 正確な結果を計算
     const exactResult = evaluateExpression(subText);
-
-    // 曖昧化オブジェクトを取得
     const resultObj = fuzzify(exactResult);
-
     setMainText(resultObj.displayText);
     setRealValue(resultObj.realValue);
     setIsFuzzy(resultObj.isFuzzy);
-    
     setSubText('');
     setIsNewInput(true);
   };
@@ -104,6 +110,8 @@ export const useCalculator = () => {
       handleDotPress();
     } else if (val === 'C') {
       handleClear();
+    } else if (val === '±') {
+      handlePlusMinusPress();
     }
   };
 
@@ -112,6 +120,8 @@ export const useCalculator = () => {
     subText,
     realValue,
     isFuzzy,
+    tooltipMessage,
+    showTooltip,
     handlePress,
   };
 };
