@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Display } from './src/components/Display';
 import { Keypad } from './src/components/Keypad';
 import { useCalculator } from './src/hooks/useCalculator';
+import Logo from './assets/logo.svg';
 
 export default function App() {
   const { mainText, subText, handlePress } = useCalculator();
@@ -11,11 +12,7 @@ export default function App() {
     <View style={styles.container}>
       {/* ロゴ領域 */}
       <View style={styles.logoContainer}>
-        <Image
-          source={require('./assets/logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <Logo width={500} height={100} />
       </View>
 
       {/* ディスプレイ領域 */}
@@ -42,7 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 200,
+    width: 300,
     height: 50,
   },
   displayWrapper: {
