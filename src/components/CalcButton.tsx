@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#f3f4f6',
-    fontSize: 32, // 少し大きめに調整
+    fontSize: 28, // 隙間に合わせて少し小さく
     fontWeight: '500',
   },
   // Default (数字ボタン)

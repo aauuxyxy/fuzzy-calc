@@ -21,7 +21,9 @@ export default function App() {
       </View>
 
       {/* キーボード領域 */}
-      <Keypad onPress={handlePress} />
+      <View style={styles.keypadWrapper}>
+        <Keypad onPress={handlePress} />
+      </View>
 
       <StatusBar style="light" />
     </View>
@@ -31,20 +33,26 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1f2937', // 電卓全体の背景色
+    backgroundColor: '#111827', // 全体のベース色
   },
   logoContainer: {
-    paddingTop: 60, // ステータスバーを考慮した余白
+    paddingTop: 60,
+    paddingBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  logo: {
-    width: 300,
-    height: 50,
+    backgroundColor: '#111827',
   },
   displayWrapper: {
-    flex: 1,
+    flex: 1.5, // 表示領域を確保
     paddingHorizontal: 20,
-    justifyContent: 'flex-end',
+    justifyContent: 'center', // 縦中央
+    backgroundColor: '#1f2937',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#374151',
+  },
+  keypadWrapper: {
+    flex: 3, // キーパッド領域を広めに
+    paddingTop: 20,
   },
 });

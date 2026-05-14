@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { fuzzify } from '../utils/fuzzifier';
 
+export const DEFAULT_MESSAGE = 'あいまいに計算してあげますよ';
+
 export const useCalculator = () => {
-  const [mainText, setMainText] = useState('0');
+  const [mainText, setMainText] = useState(DEFAULT_MESSAGE);
   const [subText, setSubText] = useState('');
   const [isNewInput, setIsNewInput] = useState(false);
 
@@ -31,17 +33,17 @@ export const useCalculator = () => {
 
   const handleNumberPress = (num: string) => {
     setMainText((prev) => {
-      const nextMain = prev === '0' || isNewInput ? num : prev + num;
+      const nextMain = prev === DEFAULT_MESSAGE || isNewInput ? num : prev + num;
 
       setSubText((prevSub) => {
-        if (!prevSub || prevSub === '0' || isNewInput) {
+        if (!prevSub || prevSub === DEFAULT_MESSAGE || isNewInput) {
           const parts = prevSub.split(' ');
           const lastPart = parts[parts.length - 1];
           if (/[0-9.]/.test(lastPart) && !isNewInput) {
             parts[parts.length - 1] = nextMain;
             return parts.join(' ');
           }
-          return prevSub === '' || prevSub === '0' ? num : `${prevSub}${num}`;
+          return prevSub === '' || prevSub === DEFAULT_MESSAGE ? num : `${prevSub}${num}`;
         }
         return prevSub + num;
       });
@@ -54,7 +56,7 @@ export const useCalculator = () => {
   const handleOperatorPress = (op: string) => {
     setSubText((prevSub) => {
       const trimmed = prevSub.trim();
-      if (trimmed === '') return `0 ${op} `;
+      if (trimmed === '' || trimmed === DEFAULT_MESSAGE) return `0 ${op} `;
       if (/[+\-*/×÷]$/.test(trimmed)) {
         return `${trimmed.slice(0, -1)} ${op} `;
       }
@@ -80,18 +82,18 @@ export const useCalculator = () => {
   const handleDotPress = () => {
     if (mainText.includes('.') && !isNewInput) return;
 
-    const nextMain = isNewInput ? '0.' : `${mainText}.`;
+    const nextMain = isNewInput || mainText === DEFAULT_MESSAGE ? '0.' : `${mainText}.`;
     setMainText(nextMain);
 
     setSubText((prevSub) => {
-      if (isNewInput || prevSub === '') return `${prevSub}0.`;
+      if (isNewInput || prevSub === '' || prevSub === DEFAULT_MESSAGE) return '0.';
       return `${prevSub}.`;
     });
     setIsNewInput(false);
   };
 
   const handleClear = () => {
-    setMainText('0');
+    setMainText(DEFAULT_MESSAGE);
     setSubText('');
     setIsNewInput(false);
   };
