@@ -42,20 +42,22 @@ export const CalcButton: React.FC<CalcButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    height: 60,
-    width: 60,
-    borderRadius: 30, // 50% for 60x60
+    flex: 1, // 横幅を均等に取る
+    aspectRatio: 1, // 正方形（円形）を保つ
+    borderRadius: 100, // 十分に大きな値で完全な円にする
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonZero: {
-    flex: 1, // 残りのスペース（2列分）をすべて埋める
+    flex: 2.15, // 0ボタンは2列分＋ギャップ分の幅を取るため、少し大きめのflex値を設定（見た目の微調整）
+    aspectRatio: undefined, // 円形のアスペクト比を解除
+    borderRadius: 100, // カプセル型にする
     alignItems: 'flex-start',
-    paddingLeft: 24, // 左寄せ気味に配置
+    paddingLeft: 30, // 左寄りにテキストを配置
   },
   text: {
     color: '#f3f4f6',
-    fontSize: 24, // 1.5rem 相当
+    fontSize: 32, // 少し大きめに調整
     fontWeight: '500',
   },
   // Default (数字ボタン)

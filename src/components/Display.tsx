@@ -33,21 +33,19 @@ export const Display: React.FC<DisplayProps> = ({ subText = '', mainText }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    padding: 20,
-    backgroundColor: '#374151', // プロトタイプのディスプレイ背景色
-    borderRadius: 12, // 角丸を追加
+    padding: 24, // 余白を広めに
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    minHeight: 120, // 140から120に調整（プロトタイプ合わせ）
+    flex: 1, // 親要素の中で広がるようにする
   },
   subText: {
-    color: '#9ca3af', // プロトタイプのサブテキスト色
-    fontSize: 14, // 0.875rem相当
+    color: '#9ca3af',
+    fontSize: 24, // さらに大きく
     marginBottom: 8,
   },
   mainText: {
-    color: '#f3f4f6', // プロトタイプのメインテキスト色
-    fontSize: 24, // 1.5rem相当
+    color: '#f3f4f6',
+    fontSize: 64, // 画面幅いっぱいを想定して大きく
     fontWeight: 'bold',
   },
 });

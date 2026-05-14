@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Display } from './src/components/Display';
 import { CalcButton } from './src/components/CalcButton';
 
@@ -10,81 +10,70 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* ディスプレイ領域 */}
-        <View style={styles.calcContainer}>
-          <Display subText="100 + 100 =" mainText="200くらいじゃないですかね、知らんけど" />
+    <View style={styles.container}>
+      {/* ディスプレイ領域 */}
+      <View style={styles.displayWrapper}>
+        <Display subText="100 + 100 =" mainText="200くらいじゃないですかね、知らんけど" />
+      </View>
 
-          {/* キーボード領域 */}
-          <View style={styles.keypadGrid}>
-            <View style={styles.row}>
-              <CalcButton title="C" onPress={() => handlePress('C')} type="action" />
-              <CalcButton title="±" onPress={() => handlePress('±')} type="operator" />
-              <CalcButton title="%" onPress={() => handlePress('%')} type="operator" />
-              <CalcButton title="÷" onPress={() => handlePress('÷')} type="operator" />
-            </View>
-            <View style={styles.row}>
-              <CalcButton title="7" onPress={() => handlePress('7')} />
-              <CalcButton title="8" onPress={() => handlePress('8')} />
-              <CalcButton title="9" onPress={() => handlePress('9')} />
-              <CalcButton title="×" onPress={() => handlePress('×')} type="operator" />
-            </View>
-            <View style={styles.row}>
-              <CalcButton title="4" onPress={() => handlePress('4')} />
-              <CalcButton title="5" onPress={() => handlePress('5')} />
-              <CalcButton title="6" onPress={() => handlePress('6')} />
-              <CalcButton title="-" onPress={() => handlePress('-')} type="operator" />
-            </View>
-            <View style={styles.row}>
-              <CalcButton title="1" onPress={() => handlePress('1')} />
-              <CalcButton title="2" onPress={() => handlePress('2')} />
-              <CalcButton title="3" onPress={() => handlePress('3')} />
-              <CalcButton title="+" onPress={() => handlePress('+')} type="operator" />
-            </View>
-            <View style={styles.row}>
-              <CalcButton title="0" onPress={() => handlePress('0')} isZero />
-              <CalcButton title="." onPress={() => handlePress('.')} />
-              <CalcButton title="=" onPress={() => handlePress('=')} type="operator" />
-            </View>
-          </View>
+      {/* キーボード領域 */}
+      <View style={styles.keypadGrid}>
+        <View style={styles.row}>
+          <CalcButton title="C" onPress={() => handlePress('C')} type="action" />
+          <CalcButton title="±" onPress={() => handlePress('±')} type="operator" />
+          <CalcButton title="%" onPress={() => handlePress('%')} type="operator" />
+          <CalcButton title="÷" onPress={() => handlePress('÷')} type="operator" />
+        </View>
+        <View style={styles.row}>
+          <CalcButton title="7" onPress={() => handlePress('7')} />
+          <CalcButton title="8" onPress={() => handlePress('8')} />
+          <CalcButton title="9" onPress={() => handlePress('9')} />
+          <CalcButton title="×" onPress={() => handlePress('×')} type="operator" />
+        </View>
+        <View style={styles.row}>
+          <CalcButton title="4" onPress={() => handlePress('4')} />
+          <CalcButton title="5" onPress={() => handlePress('5')} />
+          <CalcButton title="6" onPress={() => handlePress('6')} />
+          <CalcButton title="-" onPress={() => handlePress('-')} type="operator" />
+        </View>
+        <View style={styles.row}>
+          <CalcButton title="1" onPress={() => handlePress('1')} />
+          <CalcButton title="2" onPress={() => handlePress('2')} />
+          <CalcButton title="3" onPress={() => handlePress('3')} />
+          <CalcButton title="+" onPress={() => handlePress('+')} type="operator" />
+        </View>
+        <View style={styles.row}>
+          <CalcButton title="0" onPress={() => handlePress('0')} isZero />
+          <CalcButton title="." onPress={() => handlePress('.')} />
+          <CalcButton title="=" onPress={() => handlePress('=')} type="operator" />
         </View>
       </View>
       <StatusBar style="light" />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#f3f4f6', // プロトタイプの外側の背景色
-  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#1f2937', // 電卓全体の背景色
   },
-  calcContainer: {
-    width: 320,
-    backgroundColor: '#1f2937', // 電卓本体の背景色
-    borderRadius: 24,
-    padding: 20,
-    // iOS shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    // Android elevation
-    elevation: 5,
+  displayWrapper: {
+    flex: 1,
+    paddingTop: 60, // ステータスバー領域の確保
+    paddingHorizontal: 20,
+    justifyContent: 'flex-end',
   },
   keypadGrid: {
-    gap: 12, // 行間のギャップ
-    marginTop: 20,
+    flex: 2,
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+    gap: 12,
   },
   row: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12, // 列間のギャップ
+    gap: 12,
   },
 });
