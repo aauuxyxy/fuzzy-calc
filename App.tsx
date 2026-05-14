@@ -7,95 +7,86 @@ import { CalcButton } from './src/components/CalcButton';
 export default function App() {
   const [mainText, setMainText] = useState('0');
   const [subText, setSubText] = useState('');
-  const [previousOperand, setPreviousOperand] = useState<string | null>(null);
-  const [operator, setOperator] = useState<string | null>(null);
   const [isNewInput, setIsNewInput] = useState(false);
 
-  const calculate = (first: number, second: number, op: string): number => {
-    switch (op) {
-      case '+':
-        return first + second;
-      case '-':
-        return first - second;
-      case '×':
-        return first * second;
-      case '÷':
-        return second !== 0 ? first / second : 0;
-      default:
-        return second;
+  // 簡易的な数式評価関数
+  const evaluateExpression = (expr: string): string => {
+    try {
+      // 演算子記号をJavaScriptで評価可能な形式に変換
+      const sanitizedExpr = expr.replace(/×/g, '*').replace(/÷/g, '/');
+      // 安全のため、数値と四則演算子以外の文字を除去
+      if (/[^0-9.+\-*/\s]/.test(sanitizedExpr)) return 'Error';
+
+      // eslint-disable-next-line no-eval
+      const result = eval(sanitizedExpr);
+      return result.toString();
+    } catch (e) {
+      return 'Error';
     }
   };
 
   const handleNumberPress = (num: string) => {
     setMainText((prev) => {
-      const next = prev === '0' || isNewInput ? num : prev + num;
-      if (operator && previousOperand !== null) {
-        setSubText(`${previousOperand} ${operator} ${next}`);
-      } else {
-        setSubText(next);
-      }
+      const nextMain = prev === '0' || isNewInput ? num : prev + num;
+
+      // subTextの更新：最後の項を新しい入力に置き換える
+      setSubText((prevSub) => {
+        if (!prevSub || prevSub === '0' || isNewInput) {
+          // 演算子直後または初期状態なら、現在の式に連結または新しい項を開始
+          const parts = prevSub.split(' ');
+          const lastPart = parts[parts.length - 1];
+          if (/[0-9.]/.test(lastPart) && !isNewInput) {
+            parts[parts.length - 1] = nextMain;
+            return parts.join(' ');
+          }
+          return prevSub === '' || prevSub === '0' ? num : `${prevSub}${num}`;
+        }
+        return prevSub + num;
+      });
+
       setIsNewInput(false);
-      return next;
+      return nextMain;
     });
   };
 
   const handleOperatorPress = (op: string) => {
-    const current = parseFloat(mainText);
-
-    if (previousOperand === null) {
-      setPreviousOperand(mainText);
-      setOperator(op);
-      setSubText(`${mainText} ${op}`);
-      setIsNewInput(true);
-    } else if (operator) {
-      const result = calculate(parseFloat(previousOperand), current, operator);
-      const resultStr = result.toString();
-      setPreviousOperand(resultStr);
-      setOperator(op);
-      setMainText(resultStr);
-      setSubText(`${resultStr} ${op}`);
-      setIsNewInput(true);
-    }
+    // 既に演算子で終わっている場合は置換、そうでなければ追加
+    setSubText((prevSub) => {
+      const trimmed = prevSub.trim();
+      if (trimmed === '') return `0 ${op} `;
+      if (/[+-\/×÷]$/.test(trimmed)) {
+        return `${trimmed.slice(0, -1)} ${op} `;
+      }
+      return `${trimmed} ${op} `;
+    });
+    setIsNewInput(true);
   };
 
   const handleEqualPress = () => {
-    if (previousOperand === null || operator === null) return;
+    if (subText.trim() === '') return;
 
-    const current = parseFloat(mainText);
-    const result = calculate(parseFloat(previousOperand), current, operator);
-    const resultStr = result.toString();
-
-    setSubText(''); // イコール時はサブテキストをクリア
-    setMainText(resultStr);
-    setPreviousOperand(null);
-    setOperator(null);
+    const result = evaluateExpression(subText);
+    setMainText(result);
+    setSubText('');
     setIsNewInput(true);
   };
 
   const handleDotPress = () => {
-    let next: string;
-    if (isNewInput) {
-      next = '0.';
-      setMainText(next);
-      setIsNewInput(false);
-    } else {
-      if (mainText.includes('.')) return;
-      next = mainText + '.';
-      setMainText(next);
-    }
+    if (mainText.includes('.') && !isNewInput) return;
 
-    if (operator && previousOperand !== null) {
-      setSubText(`${previousOperand} ${operator} ${next}`);
-    } else {
-      setSubText(next);
-    }
+    const nextMain = isNewInput ? '0.' : `${mainText}.`;
+    setMainText(nextMain);
+
+    setSubText((prevSub) => {
+      if (isNewInput || prevSub === '') return `${prevSub}0.`;
+      return `${prevSub}.`;
+    });
+    setIsNewInput(false);
   };
 
   const handleClear = () => {
     setMainText('0');
     setSubText('');
-    setPreviousOperand(null);
-    setOperator(null);
     setIsNewInput(false);
   };
 
