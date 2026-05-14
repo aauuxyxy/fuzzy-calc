@@ -1,26 +1,27 @@
-/**
- * Fuzzy Calc - メインアプリケーションエントリーポイント
- *
- * Issue #6: プロジェクトの初期化に伴い生成された初期ファイルです。
- * 今後、ここにナビゲーションやメイン画面のコンポーネントが組み込まれます。
- */
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
+import { Display } from './src/components/Display';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      {/* 動作確認用のダミーデータをDisplayに渡す */}
+      <View style={styles.displayContainer}>
+        <Display subText="12 + 34 =" mainText="46" />
+      </View>
+      <StatusBar style="light" />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#000', // アプリ全体の背景を黒にしてディスプレイと馴染ませる
+  },
+  displayContainer: {
+    flex: 1,
+    justifyContent: 'flex-start', // 上部に配置
+    paddingTop: 50,
   },
 });
