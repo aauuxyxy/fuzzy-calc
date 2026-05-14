@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { DEFAULT_MESSAGE } from '../hooks/useCalculator';
+import { DEFAULT_MESSAGE } from '../constants/messages';
 
 export interface DisplayProps {
   /**
