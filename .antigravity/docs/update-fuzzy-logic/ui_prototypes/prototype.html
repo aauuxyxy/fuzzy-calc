@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fuzzy-calc UI Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+        }
+        .calc-body {
+            background-color: #1f2937;
+            max-width: 375px;
+            height: 667px;
+            margin: 20px auto;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        .secret-value {
+            font-size: 10px;
+            color: #4b5563;
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="calc-body p-6">
+        <!-- Header / Logo -->
+        <div class="flex justify-center pt-4 mb-8">
+            <div class="w-40 h-10 bg-gray-700 flex items-center justify-center rounded text-xs text-gray-400">
+                LOGO (160x40)
+            </div>
+        </div>
+
+        <!-- Display Area -->
+        <div class="flex-1 flex flex-col justify-end items-end mb-8 relative">
+            <div id="sub-text" class="text-gray-400 text-2xl mb-2">12 + 34</div>
+            <div id="main-text" class="text-white text-5xl font-bold text-right break-all">
+                だいたい 50 くらい？
+            </div>
+            <!-- Secret Display -->
+            <div id="secret-display" class="secret-value">正解: 46</div>
+        </div>
+
+        <!-- Keypad Placeholder -->
+        <div class="grid grid-cols-4 gap-3">
+            <template id="key-template">
+                <div class="h-16 w-16 bg-gray-800 rounded-full flex items-center justify-center text-white text-xl font-medium cursor-pointer active:bg-gray-700 transition">
+                </div>
+            </template>
+        </div>
+
+        <div id="keypad" class="grid grid-cols-4 gap-3">
+            <!-- JS will fill this -->
+        </div>
+    </div>
+
+    <script>
+        const keys = [
+            'C', '÷', '×', 'DEL',
+            '7', '8', '9', '-',
+            '4', '5', '6', '+',
+            '1', '2', '3', '=',
+            '0', '.', '' , ''
+        ];
+
+        const keypad = document.getElementById('keypad');
+        const mainText = document.getElementById('main-text');
+        const secretDisplay = document.getElementById('secret-display');
+
+        keys.forEach(key => {
+            const div = document.createElement('div');
+            div.className = "h-16 w-full bg-gray-700 rounded-2xl flex items-center justify-center text-white text-xl font-medium cursor-pointer active:bg-gray-600 transition";
+            if (['÷', '×', '-', '+', '='].includes(key)) div.classList.add('bg-orange-500', 'active:bg-orange-400');
+            div.textContent = key;
+            
+            div.onclick = () => {
+                if (key === '=') {
+                    // Simulating result
+                    mainText.textContent = "だいたい 100 くらい...";
+                    secretDisplay.style.opacity = "1";
+                    secretDisplay.textContent = "正解: 88";
+                } else if (key === 'C') {
+                    mainText.textContent = "0";
+                    secretDisplay.style.opacity = "0";
+                }
+            };
+            
+            keypad.appendChild(div);
+        });
+    </script>
+
+    <div class="max-w-md mx-auto mt-8 bg-gray-800 p-4 rounded-xl text-gray-300 text-sm">
+        <h2 class="font-bold mb-2 text-white">プロトタイプ解説</h2>
+        <ul class="list-disc pl-5 space-y-1">
+            <li><strong>ロゴ</strong>: 画面上部中央に配置（高さ40px想定）。</li>
+            <li><strong>2桁以上の曖昧化</strong>: 「=」を押すと、正確な数字ではなく曖昧なフレーズが表示されます。</li>
+            <li><strong>隠し正解</strong>: 右下に極小サイズで本当の答えが表示されます。</li>
+        </ul>
+    </div>
+</body>
+</html>
