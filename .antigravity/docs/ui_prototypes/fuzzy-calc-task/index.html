@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fuzzy Calc Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Hiragino Maru Gothic ProN', sans-serif;
+      background-color: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calc-container {
+      width: 320px;
+      background-color: #1f2937;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .display {
+      background-color: #374151;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .sub-display {
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+    .main-display {
+      color: #f3f4f6;
+      font-size: 1.5rem;
+      text-align: right;
+      line-height: 1.2;
+      word-break: break-all;
+    }
+    .key-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .btn {
+      background-color: #4b5563;
+      color: #f3f4f6;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+    .btn:active { background-color: #6b7280; }
+    .btn-op { background-color: #f59e0b; }
+    .btn-op:active { background-color: #fbbf24; }
+    .btn-action { background-color: #ef4444; }
+    .btn-action:active { background-color: #f87171; }
+    .btn-zero {
+      grid-column: span 2;
+      border-radius: 30px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="calc-container">
+    <div class="display">
+      <div class="sub-display">100 + 100 =</div>
+      <div class="main-display" id="result-text">200くらいじゃないですかね、知らんけど</div>
+    </div>
+    <div class="key-grid">
+      <button class="btn btn-action" onclick="document.getElementById('result-text').innerText='0'">C</button>
+      <button class="btn btn-op">±</button>
+      <button class="btn btn-op">%</button>
+      <button class="btn btn-op">÷</button>
+
+      <button class="btn">7</button>
+      <button class="btn">8</button>
+      <button class="btn">9</button>
+      <button class="btn btn-op">×</button>
+
+      <button class="btn">4</button>
+      <button class="btn">5</button>
+      <button class="btn">6</button>
+      <button class="btn btn-op">-</button>
+
+      <button class="btn">1</button>
+      <button class="btn">2</button>
+      <button class="btn">3</button>
+      <button class="btn btn-op">+</button>
+
+      <button class="btn btn-zero">0</button>
+      <button class="btn">.</button>
+      <button class="btn btn-op" onclick="document.getElementById('result-text').innerText='200くらいじゃないですかね、知らんけど'">=</button>
+    </div>
+  </div>
+</body>
+</html>
